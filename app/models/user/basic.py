@@ -1,5 +1,5 @@
 import enum
-from db.database import Base
+from app.db.database import Base
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Enum, Text, Table
 from sqlalchemy.orm import relationship
 
@@ -7,14 +7,6 @@ from sqlalchemy.orm import relationship
 class Role(enum.IntEnum):
     teacher = 1
     student = 2
-
-
-course_student = Table(
-    'course_student',
-    Base.metadata,
-    Column('student_id', ForeignKey('users.id'), primary_key=True),
-    Column('course_id', ForeignKey('courses.id'), primary_key=True)
-)
 
 
 class User(Base):
@@ -25,7 +17,7 @@ class User(Base):
     role: enum = Column(Enum(Role))
     is_active: bool = Column(Boolean)
     profile = relationship('Profile', back_populates='user', uselist=False)
-    courses = relationship('Course', secondary=course_student, back_populates='students')
+    courses = relationship('Course', secondary='course_student', back_populates='students')
 
 
 class Profile(Base):
@@ -37,3 +29,11 @@ class Profile(Base):
     bio: str = Column(Text)
     user_id: int = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship('User', back_populates='profile')
+
+
+course_student = Table(
+    'course_student',
+    Base.metadata,
+    Column('student_id', ForeignKey('users.id'), primary_key=True),
+    Column('course_id', ForeignKey('course.id'), primary_key=True)
+)

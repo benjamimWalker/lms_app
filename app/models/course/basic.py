@@ -2,9 +2,9 @@ import enum
 from sqlalchemy import Enum, Column, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
-from db.database import Base
-from .user import User, course_student
-from .mixins import Timestamp
+from app.db.database import Base
+from app.models.mixins import Timestamp
+from app.models.user.basic import User
 
 
 class ContentType(enum.Enum):
@@ -14,15 +14,19 @@ class ContentType(enum.Enum):
 
 
 class Course(Timestamp, Base):
-    __tablename__ = 'courses'
+    __tablename__ = 'course'
 
     id: int = Column(Integer, primary_key=True, index=True)
+
+    creator_id: int = Column(Integer, ForeignKey('users.id'), nullable=False)
+    creator = relationship(User)
+
     title: str = Column(String(200), nullable=False)
+
     description: str = Column(Text, nullable=True)
-    user_id: int = Column(Integer, ForeignKey('users.id'), nullable=False)
-    created_by = relationship(User)
+
     sections = relationship('Section', back_populates='course', uselist=False)
-    students = relationship(User, secondary=course_student, back_populates='courses')
+    students = relationship(User, secondary='course_student', back_populates='courses')
 
 
 class Section(Timestamp, Base):
@@ -31,7 +35,7 @@ class Section(Timestamp, Base):
     id: int = Column(Integer, primary_key=True, index=True)
     title: str = Column(String(200), nullable=False)
     description: str = Column(Text, nullable=True)
-    course_id: int = Column(Integer, ForeignKey('courses.id'), nullable=False)
+    course_id: int = Column(Integer, ForeignKey('course.id'), nullable=False)
     course = relationship('Course', back_populates='sections')
     content_blocks = relationship('ContentBlock', back_populates='section')
 
