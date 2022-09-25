@@ -20,7 +20,7 @@ def upgrade():
         sa.Column('role', sa.Enum('teacher', 'student', name='role'), nullable=True)
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
-    op.create_table('courses',
+    op.create_table('course',
                     sa.Column('created_at', sa.DateTime(), nullable=False),
                     sa.Column('updated_at', sa.DateTime(), nullable=False),
                     sa.Column('id', sa.Integer(), nullable=False),
@@ -30,7 +30,7 @@ def upgrade():
                     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
                     sa.PrimaryKeyConstraint('id')
                     )
-    op.create_index(op.f('ix_courses_id'), 'courses', ['id'], unique=False)
+    op.create_index(op.f('ix_courses_id'), 'course', ['id'], unique=False)
     op.create_table('profiles',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('first_name', sa.String(), nullable=True),
@@ -43,7 +43,7 @@ def upgrade():
     op.create_table('course_student',
                     sa.Column('student_id', sa.Integer(), nullable=False),
                     sa.Column('course_id', sa.Integer(), nullable=False),
-                    sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
+                    sa.ForeignKeyConstraint(['course_id'], ['course.id'], ),
                     sa.ForeignKeyConstraint(['student_id'], ['users.id'], ),
                     sa.PrimaryKeyConstraint('student_id', 'course_id')
                     )
@@ -54,7 +54,7 @@ def upgrade():
                     sa.Column('title', sa.String(length=200), nullable=False),
                     sa.Column('description', sa.Text(), nullable=True),
                     sa.Column('course_id', sa.Integer(), nullable=False),
-                    sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
+                    sa.ForeignKeyConstraint(['course_id'], ['course.id'], ),
                     sa.PrimaryKeyConstraint('id')
                     )
     op.create_index(op.f('ix_sections_id'), 'sections', ['id'], unique=False)
@@ -84,7 +84,7 @@ def downgrade():
     op.drop_table('sections')
     op.drop_table('course_student')
     op.drop_table('profiles')
-    op.drop_index(op.f('ix_courses_id'), table_name='courses')
-    op.drop_table('courses')
+    op.drop_index(op.f('ix_courses_id'), table_name='course')
+    op.drop_table('course')
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
