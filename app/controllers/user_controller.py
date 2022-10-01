@@ -10,16 +10,12 @@ class UserController(BaseController):
         if page <= 0 or per_page <= 0:
             raise Exception('Invalid pagination parameters')
 
-        return self.session.query(User).options(
-            selectinload(User.courses)
-        ).limit(per_page). \
+        return self.session.query(User).limit(per_page). \
             offset(page - 1). \
             all()
 
     def get_user_by_id(self, user_id: int):
-        if user := self.session.query(User) \
-                .options(selectinload(User.courses)) \
-                .get(user_id):
+        if user := self.session.query(User).get(user_id):
             return user
 
         raise Exception('User Not Found')
