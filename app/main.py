@@ -1,8 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from starlette_graphene3 import GraphQLApp, make_graphiql_handler
-from app.graphql.queries import schema
-
+from app.graphql.schemas import schema
 
 app = FastAPI()
 
