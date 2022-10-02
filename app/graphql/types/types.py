@@ -6,3 +6,8 @@ from app.models.user.basic import User
 class UserType(SQLAlchemyObjectType):
     class Meta:
         model = User
+
+
+class CourseType(SQLAlchemyObjectType):
+    class Meta:
+        model = Course
