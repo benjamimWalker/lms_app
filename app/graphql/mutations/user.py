@@ -4,11 +4,18 @@ from app.controllers.validators.user_validator import UserValidator
 from app.graphql.types.types import UserType
 
 
-class CreateUserInput(InputObjectType):
+class UpdateUserInput(InputObjectType):
     email = String()
     role = Int()
     is_active = Boolean()
     id = Int()
+
+
+class CreateUserInput(InputObjectType):
+    email = String()
+    role = Int()
+    is_active = Boolean()
+    id = Int(required=False, default_value=None)
 
 
 class CreateUser(Mutation):
@@ -22,9 +29,26 @@ class CreateUser(Mutation):
             email=user_input.email,
             role=user_input.role,
             is_active=user_input.is_active,
-            id=user_input.id
         )
+
+        if user_input.id is not None:
+            valid_user_input.id = user_input.id
 
         create_user = UserController().create_user(valid_user_input)
 
         return CreateUser(user=create_user)
+
+
+class UpdateUser(Mutation):
+    user = Field(UserType)
+
+    class Arguments:
+        user_input = UpdateUserInput()
+
+    def mutate(_, __, user_input: UpdateUserInput) -> 'UpdateUser':
+        return UpdateUser(UserController().update_user(UserValidator(
+            email=user_input.email,
+            role=user_input.role,
+            is_active=user_input.is_active,
+            id=user_input.id
+        )))
