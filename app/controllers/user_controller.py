@@ -27,6 +27,9 @@ class UserController(BaseController):
             role=user_data.role
         )
 
+        if user_data.id:
+            user.id = user_data.id
+
         self.session.add(user)
         self.session.commit()
         self.session.refresh(user)

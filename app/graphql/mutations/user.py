@@ -11,6 +11,13 @@ class CreateUserInput(InputObjectType):
     id = Int()
 
 
+class CreateUserInput(InputObjectType):
+    email = String()
+    role = Int()
+    is_active = Boolean()
+    id = Int(required=False, default_value=None)
+
+
 class CreateUser(Mutation):
     user = Field(UserType)
 
@@ -22,9 +29,12 @@ class CreateUser(Mutation):
             email=user_input.email,
             role=user_input.role,
             is_active=user_input.is_active,
-            id=user_input.id
         )
 
+        if user_input.id is not None:
+            valid_user_input.id = user_input.id
+
+        print(valid_user_input)
         create_user = UserController().create_user(valid_user_input)
 
         return CreateUser(user=create_user)
