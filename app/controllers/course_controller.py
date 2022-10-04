@@ -31,6 +31,9 @@ class CourseController(BaseController):
             description=course_data.description
         )
 
+        if course_data.id:
+            course.id = course_data.id
+
         self.session.add(course)
         self.session.commit()
         self.session.refresh(course)
