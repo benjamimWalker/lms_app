@@ -34,7 +34,6 @@ class CreateUser(Mutation):
         if user_input.id is not None:
             valid_user_input.id = user_input.id
 
-        print(valid_user_input)
         create_user = UserController().create_user(valid_user_input)
 
         return CreateUser(user=create_user)
