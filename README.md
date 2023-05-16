@@ -1,4 +1,4 @@
-# Lms app v1.1
+# Lms app v1.2
 
 This repository is based on Faraday Academy's [Fast API LMS](https://github.com/faraday-academy/fast-api-lms)
 I used their [turorial](https://youtu.be/gQTRsZpR7Gw) when I was learning Fast API and I wanted to use its idea for my own project.
