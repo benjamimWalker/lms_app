@@ -9,3 +9,6 @@ app.mount('/g', GraphQLApp(schema=schema, on_get=make_graphiql_handler()))
 
 if __name__ == '__main__':
     uvicorn.run(app)
+
+
+print("ai, ze da manga!!")
